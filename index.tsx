@@ -14,12 +14,14 @@ export default function Index() {
           style={styles.image}
           resizeMode="contain"
         />
+        {/* Nama di bawah gambar */}
+        <Text style={styles.nameText}>MUH RAIHAN RAMDHAN</Text>
       </View>
 
-      {/* Segitiga */}
+      {/* Segitiga Dekoratif */}
       <View style={styles.triangle} />
 
-      {/* Pill dengan Icon dan Angka */}
+      {/* Pill dengan Icon dan NIM */}
       <View style={styles.pill}>
         <Ionicons
           name="happy-outline"
@@ -36,34 +38,37 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "blue",
+    backgroundColor: "white",
     justifyContent: "center",
     alignItems: "center",
     gap: 30,
   },
   rectangle: {
     width: 300,
-    height: 180,
+    height: 220,
     backgroundColor: "#fff",
     borderRadius: 15,
     justifyContent: "center",
     alignItems: "center",
-    padding: 15, // ➜ memberi ruang agar gambar tidak mentok ke tepi
     borderWidth: 2,
-    borderColor: "#ccc", // warna bingkai luar
+    borderColor: "#ccc",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
-    elevation: 5, // untuk efek bayangan di Android
+    elevation: 5,
+    padding: 10,
   },
   image: {
-    width: "100%",
-    height: "100%",
-    borderRadius: 10,
-    backgroundColor: "#f0f0f0", // latar belakang dalam gambar
-    borderWidth: 1,
-    borderColor: "#999", // bingkai di sekeliling gambar
+    width: 160,
+    height: 100,
+  },
+  nameText: {
+    marginTop: 10,
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#333",
+    textAlign: "center",
   },
   triangle: {
     width: 0,
@@ -82,8 +87,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "green",
     borderRadius: 50,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingHorizontal: 25,
+    paddingVertical: 12,
+    minWidth: 200, // menjamin bentuk lonjong
   },
   pillText: {
     color: "white",
