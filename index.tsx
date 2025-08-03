@@ -1,168 +1,180 @@
-import React from "react";
-import { View, StyleSheet, SafeAreaView, Text } from "react-native";
+import * as Font from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+import React, { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-// Import 10 keluarga ikon yang berbeda
-import Ionicons from "@expo/vector-icons/Ionicons";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import Entypo from "@expo/vector-icons/Entypo";
-import EvilIcons from "@expo/vector-icons/EvilIcons";
-import Feather from "@expo/vector-icons/Feather";
-import Foundation from "@expo/vector-icons/Foundation";
-import Octicons from "@expo/vector-icons/Octicons";
-import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
+// Mencegah splash screen bersembunyi secara otomatis
+SplashScreen.preventAutoHideAsync();
 
-// Tipe untuk data ikon
-interface IconData {
-  family:
-    | "Ionicons"
-    | "FontAwesome"
-    | "MaterialIcons"
-    | "AntDesign"
-    | "Entypo"
-    | "EvilIcons"
-    | "Feather"
-    | "Foundation"
-    | "Octicons"
-    | "SimpleLineIcons";
+interface Student {
   name: string;
-  size: number;
-  color: string;
-  borderColor: string;
+  stambuk: string;
+  fontFamily: string;
+  fontWeight?:
+    | "normal"
+    | "bold"
+    | "100"
+    | "200"
+    | "300"
+    | "400"
+    | "500"
+    | "600"
+    | "700"
+    | "800"
+    | "900";
 }
 
-// Data untuk 10 ikon dengan keluarga, nama, dan warna border yang berbeda
-const iconData: IconData[] = [
+const initialStudents: Student[] = [
+  // 5 Font Statis (nama 1-5)
   {
-    family: "Ionicons",
-    name: "logo-react",
-    size: 50,
-    color: "#007aff",
-    borderColor: "#4caf50",
+    name: "wanomi",
+    stambuk: "105841114822",
+    fontFamily: "LibertinusSerif-Regular",
+  },
+  { name: "anomi", stambuk: "105841114922", fontFamily: "BebasNeue-Regular" },
+  {
+    name: "zulfitra",
+    stambuk: "105841115022",
+    fontFamily: "LuckiestGuy-Regular",
+  },
+  { name: "kanomi", stambuk: "105841115122", fontFamily: "BungeeTint-Regular" },
+  {
+    name: "nur hidayah",
+    stambuk: "105841115222",
+    fontFamily: "Arbutus-Regular",
+  },
+
+  // Nama ke-6 menggunakan font default
+  {
+    name: "muh raihan Ramadhan",
+    stambuk: "105841115322",
+    fontFamily: "System",
+  },
+
+  // 5 Font Variabel (nama 7-11)
+  {
+    name: "nur hidayat",
+    stambuk: "105841115422",
+    fontFamily: "Merienda-Variable",
+    fontWeight: "900",
   },
   {
-    family: "FontAwesome",
-    name: "github",
-    size: 50,
-    color: "#333",
-    borderColor: "#f44336",
+    name: "sitti nurul annisa",
+    stambuk: "105841115522",
+    fontFamily: "Moazilla-Headline-Variable",
+    fontWeight: "600",
   },
   {
-    family: "MaterialIcons",
-    name: "camera",
-    size: 50,
-    color: "#f50",
-    borderColor: "#ffeb3b",
+    name: "mamoni",
+    stambuk: "105841115622",
+    fontFamily: "DancingScript-Variable",
+    fontWeight: "500",
   },
   {
-    family: "AntDesign",
-    name: "apple-o",
-    size: 50,
-    color: "#a1a1a1",
-    borderColor: "#2196f3",
+    name: "hasmaniar",
+    stambuk: "105841115722",
+    fontFamily: "LexendXetta-Variable",
+    fontWeight: "800",
   },
   {
-    family: "Entypo",
-    name: "beamed-note",
-    size: 50,
-    color: "#6a0dad",
-    borderColor: "#9c27b0",
-  },
-  {
-    family: "EvilIcons",
-    name: "bell",
-    size: 50,
-    color: "#d81b60",
-    borderColor: "#ff5722",
-  },
-  {
-    family: "Feather",
-    name: "mail",
-    size: 50,
-    color: "#00bfa5",
-    borderColor: "#00bcd4",
-  },
-  {
-    family: "Foundation",
-    name: "home",
-    size: 50,
-    color: "#8d6e63",
-    borderColor: "#795548",
-  },
-  {
-    family: "Octicons",
-    name: "bug",
-    size: 50,
-    color: "#2b2b2b",
-    borderColor: "#cddc39",
-  },
-  {
-    family: "SimpleLineIcons",
-    name: "screen-tablet",
-    size: 50,
-    color: "#ff6f00",
-    borderColor: "#607d8b",
+    name: "riski riyanto",
+    stambuk: "105841115822",
+    fontFamily: "Sixtyfour-Variable",
+    fontWeight: "400",
   },
 ];
 
-// Komponen untuk setiap ikon
-const IconItem: React.FC<{ data: IconData }> = ({ data }) => {
-  let IconComponent;
-  switch (data.family) {
-    case "Ionicons":
-      IconComponent = Ionicons;
-      break;
-    case "FontAwesome":
-      IconComponent = FontAwesome;
-      break;
-    case "MaterialIcons":
-      IconComponent = MaterialIcons;
-      break;
-    case "AntDesign":
-      IconComponent = AntDesign;
-      break;
-    case "Entypo":
-      IconComponent = Entypo;
-      break;
-    case "EvilIcons":
-      IconComponent = EvilIcons;
-      break;
-    case "Feather":
-      IconComponent = Feather;
-      break;
-    case "Foundation":
-      IconComponent = Foundation;
-      break;
-    case "Octicons":
-      IconComponent = Octicons;
-      break;
-    case "SimpleLineIcons":
-      IconComponent = SimpleLineIcons;
-      break;
-    default:
-      IconComponent = Ionicons; // Default jika tidak ada yang cocok
+export default function IndexScreen() {
+  const [students, setStudents] = useState<Student[]>(initialStudents);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  useEffect(() => {
+    async function loadFonts() {
+      try {
+        await Font.loadAsync({
+          // Font Statis (sesuaikan nama file jika berbeda)
+          "LibertinusSerif-Regular": require("../../assets/fonts/LibertinusSerif-Regular.ttf"),
+          "BebasNeue-Regular": require("../../assets/fonts/BebasNeue-Regular.ttf"),
+          "LuckiestGuy-Regular": require("../../assets/fonts/LuckiestGuy-Regular.ttf"),
+          "BungeeTint-Regular": require("../../assets/fonts/BungeeTint-Regular.ttf"),
+          "Arbutus-Regular": require("../../assets/fonts/Arbutus-Regular.ttf"),
+
+          // Font Variabel (sesuaikan nama file jika berbeda)
+          "Merienda-Variable": require("../../assets/fonts/Merienda[wght].ttf"),
+          "Moazilla-Headline-Variable": require("../../assets/fonts/Moazilla-Headline-Variable.ttf"), // Asumsi nama file
+          "DancingScript-Variable": require("../../assets/fonts/DancingScript[wght].ttf"),
+          "LexendXetta-Variable": require("../../assets/fonts/LexendXetta[wght].ttf"),
+          "Sixtyfour-Variable": require("../../assets/fonts/Sixtyfour[wght].ttf"),
+        });
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setFontsLoaded(true);
+        SplashScreen.hideAsync();
+      }
+    }
+    loadFonts();
+  }, []);
+
+  const handleSort = (order: "asc" | "desc") => {
+    const sortedStudents = [...students].sort((a, b) => {
+      const nameA = a.name.toLowerCase();
+      const nameB = b.name.toLowerCase();
+      if (nameA < nameB) return order === "asc" ? -1 : 1;
+      if (nameA > nameB) return order === "asc" ? 1 : -1;
+      return 0;
+    });
+    setStudents(sortedStudents);
+  };
+
+  if (!fontsLoaded) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text style={styles.loadingText}>Memuat font...</Text>
+      </View>
+    );
   }
 
   return (
-    <View style={[styles.iconContainer, { borderColor: data.borderColor }]}>
-      <IconComponent
-        name={data.name as any}
-        size={data.size}
-        color={data.color}
-      />
-    </View>
-  );
-};
-
-export default function Index() {
-  return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Text style={styles.header}>10 Ikon dari Keluarga Berbeda</Text>
-        <View style={styles.iconWrapper}>
-          {iconData.map((icon, index) => (
-            <IconItem key={index} data={icon} />
+        <Text style={styles.header}>Daftar Mahasiswa & Font</Text>
+        <View style={styles.sortButtonContainer}>
+          <TouchableOpacity
+            style={styles.sortButton}
+            onPress={() => handleSort("asc")}
+          >
+            <Text style={styles.buttonText}>Urutkan Menaik (A-Z)</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.sortButton}
+            onPress={() => handleSort("desc")}
+          >
+            <Text style={styles.buttonText}>Urutkan Menurun (Z-A)</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.listContainer}>
+          {students.map((student, index) => (
+            <View key={index} style={styles.studentItem}>
+              <Text
+                style={[
+                  styles.studentName,
+                  { fontFamily: student.fontFamily },
+                  student.fontWeight ? { fontWeight: student.fontWeight } : {},
+                ]}
+              >
+                {student.name}
+              </Text>
+              <Text style={styles.stambukText}>Stambuk: {student.stambuk}</Text>
+            </View>
           ))}
         </View>
       </View>
@@ -173,33 +185,59 @@ export default function Index() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#f8f8f8",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
   },
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: "center",
-    alignItems: "center",
   },
   header: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 30,
+    marginBottom: 20,
     textAlign: "center",
   },
-  iconWrapper: {
+  sortButtonContainer: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 20,
+    justifyContent: "space-around",
+    marginBottom: 20,
   },
-  iconContainer: {
-    width: 80,
-    height: 80,
-    justifyContent: "center",
-    alignItems: "center",
-    borderWidth: 5,
-    borderRadius: 15,
+  sortButton: {
+    backgroundColor: "#007aff",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  listContainer: {
+    flex: 1,
+  },
+  studentItem: {
+    backgroundColor: "#fff",
+    padding: 15,
+    borderRadius: 8,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: "#e0e0e0",
+  },
+  studentName: {
+    fontSize: 20,
+  },
+  stambukText: {
+    fontSize: 14,
+    color: "#666",
+    marginTop: 5,
   },
 });
