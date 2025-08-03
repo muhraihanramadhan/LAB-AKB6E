@@ -1,106 +1,205 @@
-import React, { useRef } from "react";
-import {
-  Animated,
-  Dimensions,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import React from "react";
+import { View, StyleSheet, SafeAreaView, Text } from "react-native";
 
-// Ambil lebar layar untuk hitung ukuran sel grid
-const screenWidth = Dimensions.get("window").width;
-const numColumns = 3; // 3 kolom untuk grid 3x3
-const cellPadding = 6;
-const cellSize = (screenWidth - cellPadding * 2 * numColumns) / numColumns;
+// Import 10 keluarga ikon yang berbeda
+import Ionicons from "@expo/vector-icons/Ionicons";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import Entypo from "@expo/vector-icons/Entypo";
+import EvilIcons from "@expo/vector-icons/EvilIcons";
+import Feather from "@expo/vector-icons/Feather";
+import Foundation from "@expo/vector-icons/Foundation";
+import Octicons from "@expo/vector-icons/Octicons";
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 
-// Buat 9 pasang gambar utama & alternatif dari picsum.photos
-const imagePairs = Array.from({ length: 9 }, (_, i) => ({
-  id: i,
-  main: { uri: `https://picsum.photos/id/${100 + i}/200/200` },
-  alt: { uri: `https://picsum.photos/id/${200 + i}/200/200` },
-}));
+// Tipe untuk data ikon
+interface IconData {
+  family:
+    | "Ionicons"
+    | "FontAwesome"
+    | "MaterialIcons"
+    | "AntDesign"
+    | "Entypo"
+    | "EvilIcons"
+    | "Feather"
+    | "Foundation"
+    | "Octicons"
+    | "SimpleLineIcons";
+  name: string;
+  size: number;
+  color: string;
+  borderColor: string;
+}
 
-export default function ImageGrid() {
-  // Animated.Value untuk skala masing-masing gambar
-  const scaleRefs = useRef(
-    imagePairs.map(() => new Animated.Value(0.8)) // Awal skala 0.8
-  ).current;
+// Data untuk 10 ikon dengan keluarga, nama, dan warna border yang berbeda
+const iconData: IconData[] = [
+  {
+    family: "Ionicons",
+    name: "logo-react",
+    size: 50,
+    color: "#007aff",
+    borderColor: "#4caf50",
+  },
+  {
+    family: "FontAwesome",
+    name: "github",
+    size: 50,
+    color: "#333",
+    borderColor: "#f44336",
+  },
+  {
+    family: "MaterialIcons",
+    name: "camera",
+    size: 50,
+    color: "#f50",
+    borderColor: "#ffeb3b",
+  },
+  {
+    family: "AntDesign",
+    name: "apple-o",
+    size: 50,
+    color: "#a1a1a1",
+    borderColor: "#2196f3",
+  },
+  {
+    family: "Entypo",
+    name: "beamed-note",
+    size: 50,
+    color: "#6a0dad",
+    borderColor: "#9c27b0",
+  },
+  {
+    family: "EvilIcons",
+    name: "bell",
+    size: 50,
+    color: "#d81b60",
+    borderColor: "#ff5722",
+  },
+  {
+    family: "Feather",
+    name: "mail",
+    size: 50,
+    color: "#00bfa5",
+    borderColor: "#00bcd4",
+  },
+  {
+    family: "Foundation",
+    name: "home",
+    size: 50,
+    color: "#8d6e63",
+    borderColor: "#795548",
+  },
+  {
+    family: "Octicons",
+    name: "bug",
+    size: 50,
+    color: "#2b2b2b",
+    borderColor: "#cddc39",
+  },
+  {
+    family: "SimpleLineIcons",
+    name: "screen-tablet",
+    size: 50,
+    color: "#ff6f00",
+    borderColor: "#607d8b",
+  },
+];
 
-  // Simpan status gambar utama/alternatif (tanpa trigger re-render)
-  const imageStates = useRef(imagePairs.map(() => ({ isAlt: false }))).current;
-
-  // Saat gambar ditekan
-  const handlePress = (index: number) => {
-    // Toggle gambar utama <-> alternatif
-    imageStates[index].isAlt = !imageStates[index].isAlt;
-
-    // Hitung skala baru, maksimal 2x
-    const currentValue = scaleRefs[index]._value;
-    const newScale = Math.min(currentValue + 0.2, 2);
-
-    // Animasikan perubahan skala
-    Animated.spring(scaleRefs[index], {
-      toValue: newScale,
-      useNativeDriver: true,
-    }).start();
-  };
+// Komponen untuk setiap ikon
+const IconItem: React.FC<{ data: IconData }> = ({ data }) => {
+  let IconComponent;
+  switch (data.family) {
+    case "Ionicons":
+      IconComponent = Ionicons;
+      break;
+    case "FontAwesome":
+      IconComponent = FontAwesome;
+      break;
+    case "MaterialIcons":
+      IconComponent = MaterialIcons;
+      break;
+    case "AntDesign":
+      IconComponent = AntDesign;
+      break;
+    case "Entypo":
+      IconComponent = Entypo;
+      break;
+    case "EvilIcons":
+      IconComponent = EvilIcons;
+      break;
+    case "Feather":
+      IconComponent = Feather;
+      break;
+    case "Foundation":
+      IconComponent = Foundation;
+      break;
+    case "Octicons":
+      IconComponent = Octicons;
+      break;
+    case "SimpleLineIcons":
+      IconComponent = SimpleLineIcons;
+      break;
+    default:
+      IconComponent = Ionicons; // Default jika tidak ada yang cocok
+  }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.grid}>
-        {/* Render 9 gambar dalam grid */}
-        {imagePairs.map((img, index) => {
-          const source = imageStates[index].isAlt ? img.alt : img.main;
-          return (
-            <TouchableOpacity
-              key={img.id}
-              onPress={() => handlePress(index)}
-              activeOpacity={0.8}
-              style={styles.cell}
-            >
-              <Animated.Image
-                source={source}
-                style={[
-                  styles.image,
-                  {
-                    transform: [{ scale: scaleRefs[index] }],
-                  },
-                ]}
-                resizeMode="cover"
-              />
-            </TouchableOpacity>
-          );
-        })}
+    <View style={[styles.iconContainer, { borderColor: data.borderColor }]}>
+      <IconComponent
+        name={data.name as any}
+        size={data.size}
+        color={data.color}
+      />
+    </View>
+  );
+};
+
+export default function Index() {
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <Text style={styles.header}>10 Ikon dari Keluarga Berbeda</Text>
+        <View style={styles.iconWrapper}>
+          {iconData.map((icon, index) => (
+            <IconItem key={index} data={icon} />
+          ))}
+        </View>
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-    paddingVertical: 20,
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#fff",
   },
-  grid: {
+  container: {
+    flex: 1,
+    padding: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 30,
+    textAlign: "center",
+  },
+  iconWrapper: {
     flexDirection: "row",
     flexWrap: "wrap",
-    width: screenWidth,
-    justifyContent: "center",
-  },
-  cell: {
-    width: cellSize,
-    height: cellSize,
-    margin: cellPadding,
-    overflow: "hidden",
-    borderRadius: 10,
-    backgroundColor: "#ccc",
     justifyContent: "center",
     alignItems: "center",
+    gap: 20,
   },
-  image: {
-    width: "100%",
-    height: "100%",
-    borderRadius: 10,
+  iconContainer: {
+    width: 80,
+    height: 80,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 5,
+    borderRadius: 15,
   },
 });
